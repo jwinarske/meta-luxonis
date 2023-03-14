@@ -1,0 +1,122 @@
+From bb9c23f361a19e6049587dfa55bf50de81cfc0a0 Mon Sep 17 00:00:00 2001
+From: Joel Winarske <joel.winarsk@gmail.com>
+Date: Tue, 14 Mar 2023 12:43:29 -0700
+Subject: [PATCH] Remove Hunter
+
+Signed-off-by: Joel Winarske <joel.winarsk@gmail.com>
+---
+ CMakeLists.txt | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5becd2e5..d61414a2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -2,11 +2,13 @@
+ # Minimum version required for Hunter package manager
+ CMAKE_MINIMUM_REQUIRED(VERSION 3.2 FATAL_ERROR)
+ #
++if (NOT)
+ include("build/cmake/HunterGate.cmake")
+ HunterGate(
+     URL "https://github.com/cpp-pm/hunter/archive/v0.23.256.tar.gz"
+     SHA1 "e9b8328133fc0643d5f921fec81f2c0808c98419"
+ )
++endif ()
+ #
+ PROJECT(libarchive C)
+ #
+@@ -408,7 +410,9 @@ SET(ADDITIONAL_LIBS "")
+ # Find ZLIB
+ #
+ IF(ENABLE_ZLIB)
++  if (NOT)
+   hunter_add_package(ZLIB)
++  endif ()
+   find_package(ZLIB CONFIG REQUIRED)
+ ELSE()
+   SET(ZLIB_FOUND FALSE) # Override cached value
+@@ -447,7 +451,9 @@ MARK_AS_ADVANCED(CLEAR ZLIB_LIBRARY)
+ # Find BZip2
+ #
+ IF(ENABLE_BZip2)
++  if (NOT)
+   hunter_add_package(BZip2)
++  endif ()
+   find_package(BZip2 CONFIG REQUIRED)
+ ELSE()
+   SET(BZip2_FOUND FALSE) # Override cached value
+@@ -476,8 +482,12 @@ MARK_AS_ADVANCED(CLEAR BZIP2_LIBRARIES)
+ # Find LZMA
+ #
+ IF(ENABLE_LZMA)
++  if (NOT)
+   hunter_add_package(lzma)
+   find_package(lzma CONFIG REQUIRED)
++  endif ()
++  find_package(PkgConfig REQUIRED)
++  pkg_check_modules(lzma REQUIRED liblzma)
+ ELSE()
+   SET(lzma_FOUND FALSE) # Override cached value
+ ENDIF()
+@@ -486,7 +496,7 @@ IF(lzma_FOUND)
+   SET(HAVE_LIBLZMA 1)
+   SET(HAVE_LZMA_H 1)
+   CMAKE_PUSH_CHECK_STATE()
+-  LIST(APPEND ADDITIONAL_LIBS lzma::lzma)
++  LIST(APPEND ADDITIONAL_LIBS lzma)
+   # Test if multithreading is supported
+   SET(CMAKE_REQUIRED_LIBRARIES "lzma")
+   CHECK_C_SOURCE_COMPILES(
+@@ -494,7 +504,7 @@ IF(lzma_FOUND)
+     HAVE_LZMA_STREAM_ENCODER_MT)
+   # Test if a macro is needed for the library.
+   TRY_MACRO_FOR_LIBRARY(
+-    "" "lzma::lzma"
++    "" "lzma"
+     COMPILES
+     "#include <lzma.h>\nint main() {return (int)lzma_version_number(); }"
+     "WITHOUT_LZMA_API_STATIC;LZMA_API_STATIC")
+@@ -569,7 +579,9 @@ ENDIF(LIBB2_FOUND)
+ # Find LZ4
+ #
+ IF(ENABLE_LZ4)
++  if (NOT)
+   hunter_add_package(lz4)
++  endif ()
+   find_package(lz4 CONFIG REQUIRED)
+ ELSE(ENABLE_LZ4)
+   SET(lz4_FOUND FALSE) # Override cached value
+@@ -593,7 +605,9 @@ MARK_AS_ADVANCED(CLEAR LZ4_LIBRARY)
+ # Find Zstd
+ #
+ IF(ENABLE_ZSTD)
++  if (NOT)
+   hunter_add_package(zstd)
++  endif ()
+   find_package(zstd CONFIG REQUIRED)
+ ELSE(ENABLE_ZSTD)
+   SET(zstd_FOUND FALSE) # Override cached value
+@@ -1131,7 +1145,9 @@ ENDIF(ENABLE_ICONV)
+ # Find Libxml2
+ #
+ IF(ENABLE_LIBXML2)
++  if (NOT)
+   hunter_add_package(libxml2)
++  endif ()
+   find_package(libxml2 CONFIG REQUIRED)
+ ELSE()
+   SET(libxml2_FOUND FALSE)
+@@ -1160,7 +1176,9 @@ ELSE(libxml2_FOUND)
+   # Find Expat
+   #
+   IF(ENABLE_EXPAT)
++    if (NOT)
+     hunter_add_package(Expat)
++    endif ()
+     find_package(expat CONFIG REQUIRED)
+   ELSE()
+     SET(EXPAT_FOUND FALSE)
+-- 
+2.39.2
+
