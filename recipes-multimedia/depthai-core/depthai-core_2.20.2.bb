@@ -29,7 +29,7 @@ DEPENDS += "\
 SRCREV = "4ff860838726a5e8ac0cbe59128c58a8f6143c6c"
 
 SRC_URI = "\
-    gitsm://github.com/luxonis/depthai-core.git;protocol=https;branch=master;lfs=1;nobranch=1;name=core \
+    gitsm://github.com/luxonis/depthai-core.git;protocol=https;nobranch=1;name=core \
     file://0001-Remove-Hunter.patch \
     \
     https://artifacts.luxonis.com/artifactory/luxonis-depthai-data-local/network/mobilenet-ssd_openvino_2021.4_6shave.blob;name=mobilenet_blob \
@@ -87,7 +87,7 @@ S = "${WORKDIR}/git"
 
 inherit cmake pkgconfig
 
-PACKAGECONFIG ??= "tests opencv resource-compile usb2-patch-only-mode"
+PACKAGECONFIG ??= "examples tests opencv resource-compile usb2-patch-only-mode"
 
 PACKAGECONFIG[examples]             = "-DDEPTHAI_BUILD_EXAMPLES=ON,           -DDEPTHAI_BUILD_EXAMPLES=OFF, opencv"
 PACKAGECONFIG[tests]                = "-DDEPTHAI_BUILD_TESTS=ON,              -DDEPTHAI_BUILD_TESTS=OFF, catch2"
