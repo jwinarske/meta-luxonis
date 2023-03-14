@@ -1,3 +1,7 @@
+#
+# Copyright (c) 2023 Joel Winarske. All rights reserved.
+#
+
 SUMMARY = "Movidius USB Rule"
 
 LICENSE = "MIT"

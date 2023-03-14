@@ -1,0 +1,38 @@
+From a3872eea5815c106d85b37637c1662c72b2369b5 Mon Sep 17 00:00:00 2001
+From: Joel Winarske <joel.winarsk@gmail.com>
+Date: Tue, 14 Mar 2023 14:59:01 +0000
+Subject: [PATCH] Remove Hunter
+
+-Host Contamination with $HOME/.hunter
+
+Signed-off-by: Joel Winarske <joel.winarsk@gmail.com>
+---
+ CMakeLists.txt | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2160770..e1ec5f4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -4,12 +4,12 @@
+ 
+ cmake_minimum_required(VERSION 3.2)
+ 
+-include("cmake/HunterGate.cmake")
+-HunterGate(
+-    URL "https://github.com/cpp-pm/hunter/archive/v0.23.320.tar.gz"
+-    SHA1 "9b4e732afd22f40482c11ad6342f7d336634226f"
+-    LOCAL # Local config for dependencies
+-)
++#include("cmake/HunterGate.cmake")
++#HunterGate(
++#    URL "https://github.com/cpp-pm/hunter/archive/v0.23.320.tar.gz"
++#    SHA1 "9b4e732afd22f40482c11ad6342f7d336634226f"
++#    LOCAL # Local config for dependencies
++#)
+ 
+ ### Constants
+ set(TARGET_NAME "XLink")
+-- 
+2.39.2
+
