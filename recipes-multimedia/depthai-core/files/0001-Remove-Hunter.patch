@@ -1,19 +1,19 @@
-From a4cfafb78f54128c054edac7a79a6479db2618c3 Mon Sep 17 00:00:00 2001
+From 76c22e51b07a5d3ee1028b212ddbb43eae419097 Mon Sep 17 00:00:00 2001
 From: Joel Winarske <joel.winarsk@gmail.com>
-Date: Tue, 14 Mar 2023 14:50:46 -0700
+Date: Tue, 14 Mar 2023 19:33:51 -0700
 Subject: [PATCH] Remove Hunter
 
 Signed-off-by: Joel Winarske <joel.winarsk@gmail.com>
 ---
- CMakeLists.txt                  |  16 +----
+ CMakeLists.txt                  |  73 ++--------------------
  cmake/depthaiConfig.cmake.in    |   3 -
  cmake/depthaiDependencies.cmake |  21 ++-----
  examples/CMakeLists.txt         | 107 --------------------------------
  tests/CMakeLists.txt            |  91 ++++-----------------------
- 5 files changed, 19 insertions(+), 219 deletions(-)
+ 5 files changed, 21 insertions(+), 274 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 158febfb..e6619cfe 100644
+index 158febfb..fe919961 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -30,12 +30,6 @@ else()
@@ -29,7 +29,71 @@ index 158febfb..e6619cfe 100644
  
  # Move binary dir if windows, to shorten the path
  if(WIN32)
-@@ -430,11 +424,11 @@ target_link_libraries(${TARGET_CORE_NAME}
+@@ -305,61 +299,8 @@ endif()
+ # Set constant
+ set(DEPTHAI_RESOURCES_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/resources")
+ 
+-# Include configuration
+-include(Depthai/DepthaiDeviceSideConfig)    # Depthai device binary commit/version configuration
+-include(Depthai/DepthaiBootloaderConfig)    # Depthai bootloader binary commit/version configuration
+-
+-# Include downloaders
+-include(DepthaiDownloader)                  # Depthai device binary downloader
+-include(DepthaiBootloaderDownloader)        # Depthai bootloader binary downloader
+-
+-
+-# depthai-shared enforce commit hash match if CI
+-if($ENV{CI})
+-    set(DEPTHAI_SHARED_COMMIT_HASH_ENFORCE ON)
+-    set(DEPTHAI_BOOTLOADER_SHARED_COMMIT_HASH_ENFORCE ON)
+-endif()
+-
+-
+-# Then get the Depthai device side binaries (local or download)
+-if(DEPTHAI_CMD_PATH OR DEPTHAI_USB2_CMD_PATH OR DEPTHAI_USB2_PATCH_PATH)
+-    # At least one of the paths is set. include binaries locally
+-    message(STATUS "Using local Depthai device side binaries...")
+-
+-    DepthaiLocal(
+-        PATCH_ONLY ${DEPTHAI_USB2_PATCH_ONLY_MODE}
+-        "${DEPTHAI_RESOURCES_OUTPUT_DIR}"            # Output folder
+-        DEPTHAI_RESOURCE_LIST                       # List of output resources
+-        "${DEPTHAI_CMD_PATH}"                       # depthai.cmd
+-        "${DEPTHAI_USB2_CMD_PATH}"                  # depthai-usb2.cmd
+-        "${DEPTHAI_USB2_PATCH_PATH}"                # depthai-usb2-patch.patch
+-    )
+-
+-else()
+-    # No user specified paths, download from server
+-    message(STATUS "Downloading Depthai device side binaries from server...")
+-
+-    DepthaiDownload(
+-        "${DEPTHAI_SHARED_COMMIT_HASH}" "${DEPTHAI_SHARED_COMMIT_HASH_ENFORCE}"
+-        PATCH_ONLY ${DEPTHAI_USB2_PATCH_ONLY_MODE}
+-        "${DEPTHAI_RESOURCES_OUTPUT_DIR}"            # Output folder
+-        DEPTHAI_RESOURCE_LIST                       # List of output resources
+-        "${DEPTHAI_DEVICE_SIDE_MATURITY}"           # Maturity
+-        "${DEPTHAI_DEVICE_SIDE_COMMIT}"             # commit hash
+-        "${DEPTHAI_DEVICE_SIDE_VERSION}"            # Optional version
+-    )
+-endif()
+-list(APPEND RESOURCE_COMPILED_FILES ${DEPTHAI_RESOURCE_LIST})
+-
+-# Add bootloader
+-DepthaiBootloaderDownload(
+-    "${DEPTHAI_BOOTLOADER_SHARED_COMMIT_HASH}" "${DEPTHAI_BOOTLOADER_SHARED_COMMIT_HASH_ENFORCE}"
+-    "${DEPTHAI_RESOURCES_OUTPUT_DIR}"                # Output folder
+-    DEPTHAI_BOOTLOADER_RESOURCE_LIST                # List of output resources
+-    "${DEPTHAI_BOOTLOADER_MATURITY}"                # Maturity
+-    "${DEPTHAI_BOOTLOADER_VERSION}"                 # if maturity == snapshot -> hash else version
+-)
+-list(APPEND RESOURCE_COMPILED_FILES ${DEPTHAI_BOOTLOADER_RESOURCE_LIST})
++list(APPEND RESOURCE_COMPILED_FILES ${DEPTHAI_DEVICE_FWP_PATH})
++list(APPEND RESOURCE_COMPILED_FILES ${DEPTHAI_BOOTLOADER_FWP_PATH})
+ 
+ message(STATUS "LIST OF RESOURCE COMPILED FILES: ${RESOURCE_COMPILED_FILES}")
+ 
+@@ -430,11 +371,11 @@ target_link_libraries(${TARGET_CORE_NAME}
      PRIVATE
          XLink
          Threads::Threads
@@ -43,7 +107,7 @@ index 158febfb..e6619cfe 100644
  )
  
  # Add compile & CMake definitions
-@@ -618,19 +612,15 @@ configure_file("cmake/${PROJECT_NAME}Dependencies.cmake" ${PROJECT_NAME}Dependen
+@@ -618,19 +559,15 @@ configure_file("cmake/${PROJECT_NAME}Dependencies.cmake" ${PROJECT_NAME}Dependen
  write_basic_package_version_file(${PROJECT_NAME}ConfigVersion.cmake VERSION ${PROJECT_VERSION} COMPATIBILITY AnyNewerVersion)
  
  # Configure config file (one for exporting build directory, one for installation)
@@ -63,7 +127,7 @@ index 158febfb..e6619cfe 100644
  endif()
  
  # Export to CMake registry if specified
-@@ -657,8 +647,6 @@ if(DEPTHAI_INSTALL)
+@@ -657,8 +594,6 @@ if(DEPTHAI_INSTALL)
      install(DIRECTORY "${DEPTHAI_SHARED_3RDPARTY_INCLUDE}/" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${DEPTHAI_SHARED_3RDPARTY_HEADERS_PATH}")
      # Install depthai-bootloader-shared public headers
      install(DIRECTORY "${DEPTHAI_BOOTLOADER_SHARED_PUBLIC_INCLUDE}/" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
