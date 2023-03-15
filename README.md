@@ -1,13 +1,32 @@
 # meta-luxonis
-Luxonis Layer for Yocto (WIP)
+Luxonis Layer for Yocto
+
+## Getting Started
+
+To layer features to you OS image, add the following to your conf/local.conf file:
+
+```
+IMAGE_INSTALL:append = \"
+    depthai-core-examples \
+    depthai-core-tests \
+    movidius-udev-rule \
+    "
+```
+
+Default config includes FWP files as resource in each binary executable.  Lots of space use when installing both examples and tests.
+
+## Example Status
+
+No apparent issues
+## Tests Status
+
+Raspberry PI 4
+
+* All tests pass with exception of stability_stress_test
 
 
-**No functional validation performed yet**
 
-examples and test programs building
-
-
-## Recipes
+## Yocto Recipes
 
 ### depthai-core
 

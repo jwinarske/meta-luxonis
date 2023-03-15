@@ -26,20 +26,23 @@ DEPENDS += "\
     zlib \
     "
 
-SRCREV = "4ff860838726a5e8ac0cbe59128c58a8f6143c6c"
-FWP_DEVICE_COMMIT = "8c3d6ac1c77b0bf7f9ea6fd4d962af37663d2fbd"
-FWP_BOOT_VER = "0.0.24"
 
-DEPTHAI_BOOTLOADER_FWP_PATH = "depthai-bootloader-fwp-${FWP_BOOT_VER}.tar.xz"
-DEPTHAI_DEVICE_FWP_FILENAME = "depthai-device-fwp-${FWP_DEVICE_COMMIT}.tar.xz"
+SRCREV = "4ff860838726a5e8ac0cbe59128c58a8f6143c6c"
+
+DEPTHAI_BOOTLOADER_VERSION = "0.0.24"
+DEPTHAI_DEVICE_SIDE_COMMIT = "8c3d6ac1c77b0bf7f9ea6fd4d962af37663d2fbd"
+
+DEPTHAI_BOOTLOADER_FWP_PATH = "depthai-bootloader-fwp-${DEPTHAI_BOOTLOADER_VERSION}.tar.xz"
+DEPTHAI_DEVICE_FWP_FILENAME = "depthai-device-fwp-${DEPTHAI_DEVICE_SIDE_COMMIT}.tar.xz"
 DEPTHAI_ARTIFACTORY_URL     = "https://artifacts.luxonis.com/artifactory"
+
 
 SRC_URI = "\
     gitsm://github.com/luxonis/depthai-core.git;protocol=https;nobranch=1;name=core \
     file://0001-Remove-Hunter.patch \
     \
-    ${DEPTHAI_ARTIFACTORY_URL}/luxonis-myriad-release-local/depthai-bootloader/${FWP_BOOT_VER}/${DEPTHAI_BOOTLOADER_FWP_PATH};unpack=0;name=bootloader-fwp \
-    ${DEPTHAI_ARTIFACTORY_URL}/luxonis-myriad-snapshot-local/depthai-device-side/${FWP_DEVICE_COMMIT}/${DEPTHAI_DEVICE_FWP_FILENAME};unpack=0;name=device-fwp \
+    ${DEPTHAI_ARTIFACTORY_URL}/luxonis-myriad-release-local/depthai-bootloader/${DEPTHAI_BOOTLOADER_VERSION}/${DEPTHAI_BOOTLOADER_FWP_PATH};unpack=0;name=bootloader-fwp \
+    ${DEPTHAI_ARTIFACTORY_URL}/luxonis-myriad-snapshot-local/depthai-device-side/${DEPTHAI_DEVICE_SIDE_COMMIT}/${DEPTHAI_DEVICE_FWP_FILENAME};unpack=0;name=device-fwp \
     \
     ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/mobilenet-ssd_openvino_2021.4_6shave.blob;name=mobilenet_blob \
     ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/yolo-v3-tiny-tf_openvino_2021.4_6shave.blob;name=tiny_yolo_v3_blob \
@@ -108,10 +111,12 @@ S = "${WORKDIR}/git"
 
 EXTRA_OECMAKE += "\
     \
-    -D DEPTHAI_CLANG_FORMAT=OFF \
+    -D DEPTHAI_BOOTLOADER_VERSION=${DEPTHAI_BOOTLOADER_VERSION} \
+    -D DEPTHAI_DEVICE_SIDE_COMMIT=${DEPTHAI_DEVICE_SIDE_COMMIT} \
+    \
     -D DEPTHAI_INSTALL=ON \
     -D CMAKE_SKIP_RPATH=TRUE \
-    -D DEPTHAI_XLINK_LOCAL=OFF \
+    -D DEPTHAI_CLANG_FORMAT=OFF \
     -D DEPTHAI_ENABLE_BACKWARD=ON \
     \
     -D DEPTHAI_BOOTLOADER_FWP_PATH=${WORKDIR}/build/resources/${DEPTHAI_BOOTLOADER_FWP_PATH} \
