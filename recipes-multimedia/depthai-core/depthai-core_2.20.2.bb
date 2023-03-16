@@ -32,17 +32,17 @@ SRCREV = "4ff860838726a5e8ac0cbe59128c58a8f6143c6c"
 DEPTHAI_BOOTLOADER_VERSION = "0.0.24"
 DEPTHAI_DEVICE_SIDE_COMMIT = "8c3d6ac1c77b0bf7f9ea6fd4d962af37663d2fbd"
 
-DEPTHAI_BOOTLOADER_FWP_PATH = "depthai-bootloader-fwp-${DEPTHAI_BOOTLOADER_VERSION}.tar.xz"
-DEPTHAI_DEVICE_FWP_FILENAME = "depthai-device-fwp-${DEPTHAI_DEVICE_SIDE_COMMIT}.tar.xz"
-DEPTHAI_ARTIFACTORY_URL     = "https://artifacts.luxonis.com/artifactory"
+DEPTHAI_FWP_BOOTLOADER_FILENAME = "depthai-bootloader-fwp-${DEPTHAI_BOOTLOADER_VERSION}.tar.xz"
+DEPTHAI_FWP_DEVICE_SIDE_FILENAME = "depthai-device-fwp-${DEPTHAI_DEVICE_SIDE_COMMIT}.tar.xz"
+DEPTHAI_ARTIFACTORY_URL = "https://artifacts.luxonis.com/artifactory"
 
 
 SRC_URI = "\
     gitsm://github.com/luxonis/depthai-core.git;protocol=https;nobranch=1;name=core \
     file://0001-Remove-Hunter.patch \
     \
-    ${DEPTHAI_ARTIFACTORY_URL}/luxonis-myriad-release-local/depthai-bootloader/${DEPTHAI_BOOTLOADER_VERSION}/${DEPTHAI_BOOTLOADER_FWP_PATH};unpack=0;name=bootloader-fwp \
-    ${DEPTHAI_ARTIFACTORY_URL}/luxonis-myriad-snapshot-local/depthai-device-side/${DEPTHAI_DEVICE_SIDE_COMMIT}/${DEPTHAI_DEVICE_FWP_FILENAME};unpack=0;name=device-fwp \
+    ${DEPTHAI_ARTIFACTORY_URL}/luxonis-myriad-release-local/depthai-bootloader/${DEPTHAI_BOOTLOADER_VERSION}/${DEPTHAI_FWP_BOOTLOADER_FILENAME};unpack=0;name=bootloader-fwp \
+    ${DEPTHAI_ARTIFACTORY_URL}/luxonis-myriad-snapshot-local/depthai-device-side/${DEPTHAI_DEVICE_SIDE_COMMIT}/${DEPTHAI_FWP_DEVICE_SIDE_FILENAME};unpack=0;name=device-fwp \
     \
     ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/mobilenet-ssd_openvino_2021.4_6shave.blob;name=mobilenet_blob \
     ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/yolo-v3-tiny-tf_openvino_2021.4_6shave.blob;name=tiny_yolo_v3_blob \
@@ -113,7 +113,11 @@ S = "${WORKDIR}/git"
 EXTRA_OECMAKE += "\
     \
     -D DEPTHAI_BOOTLOADER_VERSION=${DEPTHAI_BOOTLOADER_VERSION} \
-    -D DEPTHAI_DEVICE_SIDE_COMMIT=${DEPTHAI_DEVICE_SIDE_COMMIT} \
+    -D DEPTHAI_DEVICE_VERSION=${DEPTHAI_DEVICE_SIDE_COMMIT} \
+    \
+    -D DEPTHAI_FWP_DL_PATH="${WORKDIR}" \
+    -D DEPTHAI_FWP_BOOTLOADER_FILENAME="${DEPTHAI_FWP_BOOTLOADER_FILENAME}" \
+    -D DEPTHAI_FWP_DEVICE_SIDE_FILENAME="${DEPTHAI_FWP_DEVICE_SIDE_FILENAME}" \
     \
     -D DEPTHAI_INSTALL=ON \
     -D CMAKE_SKIP_RPATH=TRUE \
@@ -121,9 +125,6 @@ EXTRA_OECMAKE += "\
     -D DEPTHAI_ENABLE_BACKWARD=ON \
     \
     ${@bb.utils.contains('PACKAGECONFIG', 'shared', '-DCMAKE_POSITION_INDEPENDENT_CODE=ON', '-DCMAKE_POSITION_INDEPENDENT_CODE=OFF', d)} \
-    \
-    -D DEPTHAI_BOOTLOADER_FWP_PATH=${WORKDIR}/build/resources/${DEPTHAI_BOOTLOADER_FWP_PATH} \
-    -D DEPTHAI_DEVICE_FWP_PATH=${WORKDIR}/build/resources/${DEPTHAI_DEVICE_FWP_FILENAME} \
     \
     -Dmobilenet_blob="${datadir}/luxonis/examples/mobilenet-ssd_openvino_2021.4_6shave.blob" \
     -Dmobilenet_5shaves_blob="${datadir}/luxonis/examples/mobilenet-ssd_openvino_2021.4_5shave.blob" \
@@ -145,15 +146,6 @@ EXTRA_OECMAKE += "\
     -Dtest_openvino_2022_1_blob="${datadir}/luxonis/tests/text-image-super-resolution-0001_2022.1.0_4shave.blob" \
     -Dtest_tiny_yolo_v4_2021-4_4shave_blob="${datadir}/luxonis/tests/yolo-v4-tiny-tf_openvino_2021.4_4shave.blob" \
     "
-
-do_configure:prepend() {
-
-    if ${@bb.utils.contains('PACKAGECONFIG', 'resource-compile', 'true', 'false', d)}; then
-        mkdir -p ${WORKDIR}/build/resources
-        cp ${WORKDIR}/${DEPTHAI_BOOTLOADER_FWP_PATH} ${WORKDIR}/build/resources
-        cp ${WORKDIR}/${DEPTHAI_DEVICE_FWP_FILENAME} ${WORKDIR}/build/resources
-    fi
-}
 
 do_install:append() {
 
