@@ -15,6 +15,10 @@ IMAGE_INSTALL:append = \"
 
 Default config includes FWP files as resource in shared library.  This is done to prevent redundancy.
 
+Known issues:
+
+https://github.com/jwinarske/meta-luxonis/issues/3
+
 ## Example Status
 
 No apparent issues
