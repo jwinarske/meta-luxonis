@@ -1,19 +1,19 @@
-From 76c22e51b07a5d3ee1028b212ddbb43eae419097 Mon Sep 17 00:00:00 2001
+From 1e9fb4ce457a4566bba7183a633c4b054fac71a5 Mon Sep 17 00:00:00 2001
 From: Joel Winarske <joel.winarsk@gmail.com>
-Date: Tue, 14 Mar 2023 19:33:51 -0700
+Date: Wed, 15 Mar 2023 17:25:21 -0700
 Subject: [PATCH] Remove Hunter
 
 Signed-off-by: Joel Winarske <joel.winarsk@gmail.com>
 ---
- CMakeLists.txt                  |  73 ++--------------------
+ CMakeLists.txt                  | 122 ++++++++++++++------------------
  cmake/depthaiConfig.cmake.in    |   3 -
- cmake/depthaiDependencies.cmake |  21 ++-----
- examples/CMakeLists.txt         | 107 --------------------------------
- tests/CMakeLists.txt            |  91 ++++-----------------------
- 5 files changed, 21 insertions(+), 274 deletions(-)
+ cmake/depthaiDependencies.cmake |  21 ++----
+ examples/CMakeLists.txt         | 107 ----------------------------
+ tests/CMakeLists.txt            |  91 ++++--------------------
+ 5 files changed, 70 insertions(+), 274 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 158febfb..fe919961 100644
+index 158febfb..8e0f6da7 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -30,12 +30,6 @@ else()
@@ -29,7 +29,50 @@ index 158febfb..fe919961 100644
  
  # Move binary dir if windows, to shorten the path
  if(WIN32)
-@@ -305,61 +299,8 @@ endif()
+@@ -124,6 +118,10 @@ if(WIN32 AND BUILD_SHARED_LIBS)
+     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON CACHE BOOL "")
+ endif()
+ 
++if(BUILD_SHARED_LIBS)
++    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
++endif()
++
+ ### Constants
+ set(PROJECT_EXPORT_GROUP "${PROJECT_NAME}Targets")
+ 
+@@ -280,6 +278,31 @@ else()
+     target_compile_features(${TARGET_CORE_NAME} INTERFACE cxx_std_14)
+ endif()
+ 
++if(BUILD_SHARED_LIBS)
++
++    #
++    # SO Version symlinks
++    #
++    set_target_properties(${TARGET_CORE_NAME}
++            PROPERTIES
++            VERSION ${PROJECT_VERSION}
++            SOVERSION ${PROJECT_VERSION_MINOR}
++            )
++
++    #
++    # LTO
++    #
++    cmake_policy(SET CMP0069 NEW)
++    include(CheckIPOSupported)
++    check_ipo_supported(RESULT ipo_support_result OUTPUT ipo_support_output)
++    if (ipo_support_result)
++        set_property(TARGET ${TARGET_CORE_NAME} PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
++    else ()
++        message(WARNING "IPO is not supported: ${ipo_support_output}")
++    endif ()
++
++endif()
++
+ # First specify options
+ option(DEPTHAI_BUILD_TESTS "Build tests" OFF)
+ option(DEPTHAI_BUILD_EXAMPLES "Build examples - Requires OpenCV library to be installed" OFF)
+@@ -305,61 +328,8 @@ endif()
  # Set constant
  set(DEPTHAI_RESOURCES_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/resources")
  
@@ -93,7 +136,7 @@ index 158febfb..fe919961 100644
  
  message(STATUS "LIST OF RESOURCE COMPILED FILES: ${RESOURCE_COMPILED_FILES}")
  
-@@ -430,11 +371,11 @@ target_link_libraries(${TARGET_CORE_NAME}
+@@ -430,11 +400,11 @@ target_link_libraries(${TARGET_CORE_NAME}
      PRIVATE
          XLink
          Threads::Threads
@@ -107,7 +150,34 @@ index 158febfb..fe919961 100644
  )
  
  # Add compile & CMake definitions
-@@ -618,19 +559,15 @@ configure_file("cmake/${PROJECT_NAME}Dependencies.cmake" ${PROJECT_NAME}Dependen
+@@ -530,6 +500,26 @@ if(DEPTHAI_OPENCV_SUPPORT)
+             target_clangformat_setup(${TARGET_OPENCV_NAME} "")
+         endif()
+ 
++        if(BUILD_SHARED_LIBS)
++
++            #
++            # SO Version symlinks
++            #
++            set_target_properties(${TARGET_OPENCV_NAME}
++                    PROPERTIES
++                    VERSION ${PROJECT_VERSION}
++                    SOVERSION ${PROJECT_VERSION_MINOR}
++                    )
++        
++            #
++            # LTO
++            #
++            if (ipo_support_result)
++                set_property(TARGET ${TARGET_OPENCV_NAME} PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
++            endif ()
++
++        endif()
++
+         # Add to list of targets to export and install
+         list(APPEND targets_to_export ${TARGET_OPENCV_NAME})
+ 
+@@ -618,19 +608,15 @@ configure_file("cmake/${PROJECT_NAME}Dependencies.cmake" ${PROJECT_NAME}Dependen
  write_basic_package_version_file(${PROJECT_NAME}ConfigVersion.cmake VERSION ${PROJECT_VERSION} COMPATIBILITY AnyNewerVersion)
  
  # Configure config file (one for exporting build directory, one for installation)
@@ -127,7 +197,7 @@ index 158febfb..fe919961 100644
  endif()
  
  # Export to CMake registry if specified
-@@ -657,8 +594,6 @@ if(DEPTHAI_INSTALL)
+@@ -657,8 +643,6 @@ if(DEPTHAI_INSTALL)
      install(DIRECTORY "${DEPTHAI_SHARED_3RDPARTY_INCLUDE}/" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${DEPTHAI_SHARED_3RDPARTY_HEADERS_PATH}")
      # Install depthai-bootloader-shared public headers
      install(DIRECTORY "${DEPTHAI_BOOTLOADER_SHARED_PUBLIC_INCLUDE}/" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")

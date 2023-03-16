@@ -13,7 +13,7 @@ IMAGE_INSTALL:append = \"
     "
 ```
 
-Default config includes FWP files as resource in each binary executable.  Lots of space use when installing both examples and tests.
+Default config includes FWP files as resource in shared library.  This is done to prevent redundancy.
 
 ## Example Status
 

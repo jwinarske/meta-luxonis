@@ -20,7 +20,7 @@ DEPENDS += "\
     libusb \
     nlohmann-json \
     psimd \
-    spdlog \
+    spdlog-luxonis \
     xlink-luxonis \
     xz \
     zlib \
@@ -100,8 +100,9 @@ SRC_URI[tiny_yolo_v4_2021-4_4shave_blob.sha256sum] = "68e9fc04971f602038457505f7
 
 inherit cmake pkgconfig
 
-PACKAGECONFIG ??= "examples tests opencv resource-compile"
+PACKAGECONFIG ??= "shared examples tests opencv resource-compile"
 
+PACKAGECONFIG[shared]               = "-DBUILD_SHARED_LIBS=ON,"
 PACKAGECONFIG[examples]             = "-DDEPTHAI_BUILD_EXAMPLES=ON,           -DDEPTHAI_BUILD_EXAMPLES=OFF, opencv"
 PACKAGECONFIG[tests]                = "-DDEPTHAI_BUILD_TESTS=ON,              -DDEPTHAI_BUILD_TESTS=OFF, catch2"
 PACKAGECONFIG[opencv]               = "-DDEPTHAI_OPENCV_SUPPORT=ON,           -DDEPTHAI_OPENCV_SUPPORT=OFF,opencv"
@@ -118,6 +119,8 @@ EXTRA_OECMAKE += "\
     -D CMAKE_SKIP_RPATH=TRUE \
     -D DEPTHAI_CLANG_FORMAT=OFF \
     -D DEPTHAI_ENABLE_BACKWARD=ON \
+    \
+    ${@bb.utils.contains('PACKAGECONFIG', 'shared', '-DCMAKE_POSITION_INDEPENDENT_CODE=ON', '-DCMAKE_POSITION_INDEPENDENT_CODE=OFF', d)} \
     \
     -D DEPTHAI_BOOTLOADER_FWP_PATH=${WORKDIR}/build/resources/${DEPTHAI_BOOTLOADER_FWP_PATH} \
     -D DEPTHAI_DEVICE_FWP_PATH=${WORKDIR}/build/resources/${DEPTHAI_DEVICE_FWP_FILENAME} \
@@ -208,3 +211,6 @@ FILES:${PN}-tests = "\
     ${datadir}/luxonis/tests \
     ${bindir}/luxonis/tests \    
 "
+
+RDEPENDS-${PN}-tests += "depthai-core"
+RDEPENDS-${PN}-examples += "depthai-core"
