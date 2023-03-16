@@ -17,7 +17,7 @@ DEPENDS += "\
     fp16-luxonis \
     libarchive-luxonis \
     libnop-luxonis \
-    libusb \
+    libusb1 \
     nlohmann-json \
     psimd \
     spdlog-luxonis \

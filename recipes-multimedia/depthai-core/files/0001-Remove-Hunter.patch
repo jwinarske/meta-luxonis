@@ -1,19 +1,19 @@
-From d7f9c2fb0d2609aef7e0bb266301f8054b9d700a Mon Sep 17 00:00:00 2001
-From: Joel Winarske <joel.winarsk@gmail.com>
-Date: Thu, 16 Mar 2023 06:31:42 -0700
+From 18aea7fdd8c0c96b9dccfce25e1b0d32e5323d97 Mon Sep 17 00:00:00 2001
+From: Joel Winarske <joel.winarske@gmail.com>
+Date: Thu, 16 Mar 2023 07:36:43 -0700
 Subject: [PATCH] Remove Hunter
 
-Signed-off-by: Joel Winarske <joel.winarsk@gmail.com>
+Signed-off-by: Joel Winarske <joel.winarske@gmail.com>
 ---
- CMakeLists.txt                  | 126 +++++++++++++++-----------------
+ CMakeLists.txt                  | 127 +++++++++++++++-----------------
  cmake/depthaiConfig.cmake.in    |   3 -
  cmake/depthaiDependencies.cmake |  21 ++----
  examples/CMakeLists.txt         | 107 ---------------------------
- tests/CMakeLists.txt            |  91 +++--------------------
- 5 files changed, 77 insertions(+), 271 deletions(-)
+ tests/CMakeLists.txt            |  95 ++++--------------------
+ 5 files changed, 80 insertions(+), 273 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 158febfb..ffea35ef 100644
+index 158febfb..44aa9bef 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -30,12 +30,6 @@ else()
@@ -29,7 +29,15 @@ index 158febfb..ffea35ef 100644
  
  # Move binary dir if windows, to shorten the path
  if(WIN32)
-@@ -280,6 +274,31 @@ else()
+@@ -168,6 +162,7 @@ include(depthaiDependencies)
+ 
+ # Add threads preference
+ set(THREADS_PREFER_PTHREAD_FLAG ON)
++find_package(Threads)
+ 
+ # Add depthai-shared, and definitions that it is PC side
+ include(${CMAKE_CURRENT_LIST_DIR}/shared/depthai-shared.cmake)
+@@ -280,6 +275,31 @@ else()
      target_compile_features(${TARGET_CORE_NAME} INTERFACE cxx_std_14)
  endif()
  
@@ -61,7 +69,7 @@ index 158febfb..ffea35ef 100644
  # First specify options
  option(DEPTHAI_BUILD_TESTS "Build tests" OFF)
  option(DEPTHAI_BUILD_EXAMPLES "Build examples - Requires OpenCV library to be installed" OFF)
-@@ -305,61 +324,23 @@ endif()
+@@ -305,61 +325,23 @@ endif()
  # Set constant
  set(DEPTHAI_RESOURCES_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/resources")
  
@@ -136,7 +144,7 @@ index 158febfb..ffea35ef 100644
  
  message(STATUS "LIST OF RESOURCE COMPILED FILES: ${RESOURCE_COMPILED_FILES}")
  
-@@ -430,15 +411,14 @@ target_link_libraries(${TARGET_CORE_NAME}
+@@ -430,15 +412,14 @@ target_link_libraries(${TARGET_CORE_NAME}
      PRIVATE
          XLink
          Threads::Threads
@@ -154,7 +162,7 @@ index 158febfb..ffea35ef 100644
  target_compile_definitions(${TARGET_CORE_NAME}
      PRIVATE
          # XLink required define
-@@ -530,6 +510,26 @@ if(DEPTHAI_OPENCV_SUPPORT)
+@@ -530,6 +511,26 @@ if(DEPTHAI_OPENCV_SUPPORT)
              target_clangformat_setup(${TARGET_OPENCV_NAME} "")
          endif()
  
@@ -181,7 +189,7 @@ index 158febfb..ffea35ef 100644
          # Add to list of targets to export and install
          list(APPEND targets_to_export ${TARGET_OPENCV_NAME})
  
-@@ -618,19 +618,15 @@ configure_file("cmake/${PROJECT_NAME}Dependencies.cmake" ${PROJECT_NAME}Dependen
+@@ -618,19 +619,15 @@ configure_file("cmake/${PROJECT_NAME}Dependencies.cmake" ${PROJECT_NAME}Dependen
  write_basic_package_version_file(${PROJECT_NAME}ConfigVersion.cmake VERSION ${PROJECT_VERSION} COMPATIBILITY AnyNewerVersion)
  
  # Configure config file (one for exporting build directory, one for installation)
@@ -201,7 +209,7 @@ index 158febfb..ffea35ef 100644
  endif()
  
  # Export to CMake registry if specified
-@@ -657,8 +653,6 @@ if(DEPTHAI_INSTALL)
+@@ -657,8 +654,6 @@ if(DEPTHAI_INSTALL)
      install(DIRECTORY "${DEPTHAI_SHARED_3RDPARTY_INCLUDE}/" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${DEPTHAI_SHARED_3RDPARTY_HEADERS_PATH}")
      # Install depthai-bootloader-shared public headers
      install(DIRECTORY "${DEPTHAI_BOOTLOADER_SHARED_PUBLIC_INCLUDE}/" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
@@ -388,7 +396,7 @@ index 8b90a890..0ea93920 100644
  
  # bootloader
 diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
-index c71936f9..59f62b12 100644
+index c71936f9..693c7b07 100644
 --- a/tests/CMakeLists.txt
 +++ b/tests/CMakeLists.txt
 @@ -3,7 +3,6 @@ include(CTest)
@@ -513,9 +521,16 @@ index c71936f9..59f62b12 100644
  
  # Bootloader version tests
  dai_add_test(bootloader_version_test src/bootloader_version_test.cpp)
-@@ -259,7 +192,7 @@ if(DEPTHAI_STABILITY_TEST_DEBUG)
+@@ -254,12 +187,12 @@ if(COMMAND target_clangformat_setup)
+     target_clangformat_setup(stability_stress_test "")
+ endif()
+ if(DEPTHAI_STABILITY_TEST_DEBUG)
+-    target_link_libraries(stability_stress_test PRIVATE depthai::opencv opencv_highgui)
++    target_link_libraries(stability_stress_test PRIVATE depthai::opencv opencv_highgui ${CMAKE_THREAD_LIBS_INIT})
+     target_compile_definitions(stability_stress_test PRIVATE DEPTHAI_STABILITY_TEST_DEBUG)
  else()
-     target_link_libraries(stability_stress_test PRIVATE depthai::core)
+-    target_link_libraries(stability_stress_test PRIVATE depthai::core)
++    target_link_libraries(stability_stress_test PRIVATE depthai::core ${CMAKE_THREAD_LIBS_INIT})
  endif()
 -target_compile_definitions(stability_stress_test PRIVATE BLOB_PATH="${tiny_yolo_v4_2021-4_4shave_blob}")
 +target_compile_definitions(stability_stress_test PRIVATE BLOB_PATH="${test_tiny_yolo_v4_2021-4_4shave_blob}")
