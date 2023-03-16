@@ -43,13 +43,13 @@ PACKAGES =+ "\
     ${PN}-tests \
     "
 
-FILES:${PN}-examples = "\
+FILES_${PN}-examples = "\
     ${bindir}/bootbootloader \
     ${bindir}/bootfirmware \
     ${bindir}/listdevices \
     "
 
-FILES:${PN}-tests = "\
+FILES_${PN}-tests = "\
     ${bindir}/multiple_open_stream \
     ${bindir}/multithreading_search_test \
 "

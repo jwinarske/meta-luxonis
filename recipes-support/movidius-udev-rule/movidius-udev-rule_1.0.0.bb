@@ -15,4 +15,4 @@ do_install () {
     install -Dm0666 ${WORKDIR}/80-movidius.rules ${D}/etc/udev/rules.d/80-movidius.rules
 }    
 
-FILES:${PN} += "/etc/udev/rules.d"
+FILES_${PN} += "/etc/udev/rules.d"

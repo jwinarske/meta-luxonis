@@ -146,7 +146,7 @@ EXTRA_OECMAKE += "\
     -Dtest_tiny_yolo_v4_2021-4_4shave_blob="${datadir}/luxonis/tests/yolo-v4-tiny-tf_openvino_2021.4_4shave.blob" \
     "
 
-do_configure:prepend() {
+do_configure_prepend() {
 
     if ${@bb.utils.contains('PACKAGECONFIG', 'resource-compile', 'true', 'false', d)}; then
         mkdir -p ${WORKDIR}/build/resources
@@ -155,7 +155,7 @@ do_configure:prepend() {
     fi
 }
 
-do_install:append() {
+do_install_append() {
 
     if ${@bb.utils.contains('PACKAGECONFIG', 'examples', 'true', 'false', d)}; then
 
@@ -202,12 +202,12 @@ PACKAGES =+ "\
     ${PN}-tests \
     "
 
-FILES:${PN}-examples = "\
+FILES_${PN}-examples = "\
     ${datadir}/luxonis/examples \
     ${bindir}/luxonis/examples \
     "
 
-FILES:${PN}-tests = "\
+FILES_${PN}-tests = "\
     ${datadir}/luxonis/tests \
     ${bindir}/luxonis/tests \    
 "
