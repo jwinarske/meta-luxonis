@@ -6,7 +6,7 @@ Luxonis Layer for Yocto
 To layer features to you OS image, add the following to your conf/local.conf file:
 
 ```
-IMAGE_INSTALL:append = \"
+IMAGE_INSTALL:append = " \
     depthai-core-examples \
     depthai-core-tests \
     movidius-udev-rule \
