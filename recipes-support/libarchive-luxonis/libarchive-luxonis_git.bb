@@ -29,6 +29,7 @@ S = "${WORKDIR}/git"
 inherit cmake pkgconfig
 
 EXTRA_OECMAKE += "\
+    -D CMAKE_POSITION_INDEPENDENT_CODE=ON \
     -D BACKWARD_TESTS=OFF \
     -D ENABLE_ACL=OFF \
     -D ENABLE_BZip2=OFF \
