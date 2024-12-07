@@ -1,4 +1,5 @@
 #
+# Copyright (c) 2024 Stephen Street (stephen@redrocketcomputing.com) All rights reserved.
 # Copyright (c) 2023 Joel Winarske. All rights reserved.
 #
 
@@ -24,53 +25,49 @@ DEPENDS += "\
     xlink-luxonis \
     xz \
     zlib \
+    jsoncpp \
     "
 
 
-SRCREV = "4ff860838726a5e8ac0cbe59128c58a8f6143c6c"
+SRCREV = "1aeacdd611ca20089d4bdac7ac5e6a6e56eb7906"
 
-DEPTHAI_BOOTLOADER_VERSION = "0.0.24"
-DEPTHAI_DEVICE_SIDE_COMMIT = "8c3d6ac1c77b0bf7f9ea6fd4d962af37663d2fbd"
+DEPTHAI_BOOTLOADER_VERSION = "0.0.28"
+DEPTHAI_DEVICE_SIDE_COMMIT = "24a3b465b979de3f69410cd225914d8bd029f3ba"
 
 DEPTHAI_FWP_BOOTLOADER_FILENAME = "depthai-bootloader-fwp-${DEPTHAI_BOOTLOADER_VERSION}.tar.xz"
 DEPTHAI_FWP_DEVICE_SIDE_FILENAME = "depthai-device-fwp-${DEPTHAI_DEVICE_SIDE_COMMIT}.tar.xz"
 DEPTHAI_ARTIFACTORY_URL = "https://artifacts.luxonis.com/artifactory"
 
-
-SRC_URI = "\
-    gitsm://github.com/luxonis/depthai-core.git;protocol=https;nobranch=1;name=core \
-    file://0001-Remove-Hunter.patch \
-    \
-    ${DEPTHAI_ARTIFACTORY_URL}/luxonis-myriad-release-local/depthai-bootloader/${DEPTHAI_BOOTLOADER_VERSION}/${DEPTHAI_FWP_BOOTLOADER_FILENAME};unpack=0;name=bootloader-fwp \
-    ${DEPTHAI_ARTIFACTORY_URL}/luxonis-myriad-snapshot-local/depthai-device-side/${DEPTHAI_DEVICE_SIDE_COMMIT}/${DEPTHAI_FWP_DEVICE_SIDE_FILENAME};unpack=0;name=device-fwp \
-    \
-    ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/mobilenet-ssd_openvino_2021.4_6shave.blob;name=mobilenet_blob \
-    ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/yolo-v3-tiny-tf_openvino_2021.4_6shave.blob;name=tiny_yolo_v3_blob \
-    ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/yolo-v4-tiny-tf_openvino_2021.4_6shave.blob;name=tiny_yolo_v4_blob \
-    ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/mobilenet-ssd_openvino_2021.4_5shave.blob;name=mobilenet_5shaves_blob \
-    ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/mobilenet-ssd_openvino_2021.4_8shave.blob;name=mobilenet_8shaves_blob \
-    ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/construction_vest.mp4;name=construction_vest \
-    ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/misc/depthai_calib.json;name=calib_v6 \
-    ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/misc/depthai_v5.calib;name=calib_v5 \
-    ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/misc/BW1098OBC.json;name=device_config \
-    ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/person-detection-retail-0013_openvino_2021.4_7shave.blob;name=person_detection \
-    ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/concat_openvino_2021.4_6shave.blob;name=concat_model \
-    ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/normalize_openvino_2021.4_4shave.blob;name=normalization_model \
-    \
-    ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/mobilenet-ssd_openvino_2021.2_8shave.blob;name=mobilenet_blob1 \
-    ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/text-image-super-resolution-0001_2020.3_4shave.blob;name=openvino_2020_3_blob \
-    ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/text-image-super-resolution-0001_2020.4_4shave.blob;name=openvino_2020_4_blob \
-    ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/text-image-super-resolution-0001_2021.1_4shave.blob;name=openvino_2021_1_blob \
-    ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/text-image-super-resolution-0001_2021.2_4shave.blob;name=openvino_2021_2_blob \
-    ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/text-image-super-resolution-0001_2021.3_4shave.blob;name=openvino_2021_3_blob \
-    ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/text-image-super-resolution-0001_2021.4.2_4shave.blob;name=openvino_2021_4_2_blob \
-    ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/text-image-super-resolution-0001_2022.1.0_4shave.blob;name=openvino_2022_1_blob \
-    ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/yolo-v4-tiny-tf_openvino_2021.4_4shave.blob;name=tiny_yolo_v4_2021-4_4shave_blob \
-    "
+SRC_URI = "gitsm://github.com/luxonis/depthai-core.git;protocol=https;nobranch=1;name=core \
+           ${DEPTHAI_ARTIFACTORY_URL}/luxonis-myriad-release-local/depthai-bootloader/${DEPTHAI_BOOTLOADER_VERSION}/${DEPTHAI_FWP_BOOTLOADER_FILENAME};unpack=0;name=bootloader-fwp \
+           ${DEPTHAI_ARTIFACTORY_URL}/luxonis-myriad-snapshot-local/depthai-device-side/${DEPTHAI_DEVICE_SIDE_COMMIT}/${DEPTHAI_FWP_DEVICE_SIDE_FILENAME};unpack=0;name=device-fwp \
+           ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/mobilenet-ssd_openvino_2021.4_6shave.blob;name=mobilenet_blob \
+           ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/yolo-v3-tiny-tf_openvino_2021.4_6shave.blob;name=tiny_yolo_v3_blob \
+           ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/yolo-v4-tiny-tf_openvino_2021.4_6shave.blob;name=tiny_yolo_v4_blob \
+           ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/mobilenet-ssd_openvino_2021.4_5shave.blob;name=mobilenet_5shaves_blob \
+           ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/mobilenet-ssd_openvino_2021.4_8shave.blob;name=mobilenet_8shaves_blob \
+           ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/construction_vest.mp4;name=construction_vest \
+           ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/misc/depthai_calib.json;name=calib_v6 \
+           ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/misc/depthai_v5.calib;name=calib_v5 \
+           ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/misc/BW1098OBC.json;name=device_config \
+           ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/person-detection-retail-0013_openvino_2021.4_7shave.blob;name=person_detection \
+           ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/concat_openvino_2021.4_6shave.blob;name=concat_model \
+           ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/normalize_openvino_2021.4_4shave.blob;name=normalization_model \
+           ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/mobilenet-ssd_openvino_2021.2_8shave.blob;name=mobilenet_blob1 \
+           ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/text-image-super-resolution-0001_2020.3_4shave.blob;name=openvino_2020_3_blob \
+           ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/text-image-super-resolution-0001_2020.4_4shave.blob;name=openvino_2020_4_blob \
+           ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/text-image-super-resolution-0001_2021.1_4shave.blob;name=openvino_2021_1_blob \
+           ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/text-image-super-resolution-0001_2021.2_4shave.blob;name=openvino_2021_2_blob \
+           ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/text-image-super-resolution-0001_2021.3_4shave.blob;name=openvino_2021_3_blob \
+           ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/text-image-super-resolution-0001_2021.4.2_4shave.blob;name=openvino_2021_4_2_blob \
+           ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/text-image-super-resolution-0001_2022.1.0_4shave.blob;name=openvino_2022_1_blob \
+           ${DEPTHAI_ARTIFACTORY_URL}/luxonis-depthai-data-local/network/yolo-v4-tiny-tf_openvino_2021.4_4shave.blob;name=tiny_yolo_v4_2021-4_4shave_blob \
+           file://0001-Remove-Hunter.patch \
+           "
 
 # Firmware Packages
-SRC_URI[bootloader-fwp.sha256sum]         = "c913c636c86652ea96eda2135a517620f7d528d6357ddc697edfa20762a7cb30"
-SRC_URI[device-fwp.sha256sum]             = "7b036b9ab1b5c20d37dffd4977ccbe1c43b54dbf770a2abbcdcfd3d4ffdf04b1"
+SRC_URI[bootloader-fwp.sha256sum]         = "e7143bbe3d012edd9d81940a0be520e81564708b7b4ec79b071d701758bb828c"
+SRC_URI[device-fwp.sha256sum]             = "37005e681abfaef26fc7ee5e820cb55fead916ec48e6ed85133d34c9368df4fa"
 
 # Example Models
 SRC_URI[mobilenet_blob.sha256sum]         = "5ae9cb636bfa40df02c2ca3e64bc68a6690abd8a147903d4580aea6b6feb9c1c"
@@ -187,7 +184,15 @@ do_install:append() {
         install -d ${D}${bindir}/luxonis/tests
         find ${B}/tests -type f -perm /a+x -exec cp {} ${D}${bindir}/luxonis/tests \;
     fi
+
+    #QA Issue: File /usr/src/debug/depthai-core-ros/2.26.1/__cmrc_depthai-resources/lib.cpp in package depthai-core-ros-src contains reference to TMPDIR
+    sed -i -e "s#${WORKDIR}##g" ${B}/__cmrc_depthai-resources/lib.cpp
+    #QA Issue: File /usr/src/debug/depthai-core-ros/2.26.1/__cmrc_depthai-resources/intermediate/depthai-bootloader-fwp-0.0.28.tar.xz.cpp in package depthai-core-ros-src contains reference to TMPDIR
+    sed -i -e "s#${WORKDIR}##g" ${B}/__cmrc_depthai-resources/intermediate/depthai-bootloader-fwp-0.0.28.tar.xz.cpp
+    #QA Issue: File /usr/src/debug/depthai-core-ros/2.26.1/__cmrc_depthai-resources/intermediate/depthai-device-fwp-24a3b465b979de3f69410cd225914d8bd029f3ba.tar.xz.cpp in package depthai-core-ros-src contains reference to TMPDIR
+    sed -i -e "s#${WORKDIR}##g" ${B}/__cmrc_depthai-resources/intermediate/depthai-device-fwp-24a3b465b979de3f69410cd225914d8bd029f3ba.tar.xz.cpp
 }
+
 
 PACKAGES =+ "\
     ${PN}-examples \
@@ -204,5 +209,9 @@ FILES:${PN}-tests = "\
     ${bindir}/luxonis/tests \    
 "
 
-RDEPENDS-${PN}-tests += "depthai-core"
-RDEPENDS-${PN}-examples += "depthai-core"
+RDEPENDS-${PN}-tests += "${PN}"
+RDEPENDS-${PN}-examples += "${PN}"
+
+#QA Issue: depthai-core-ros-dbg: found library in wrong location: /usr/bin/luxonis/examples/.debug/libutility.so depthai-core-ros-examples: found library in wrong location: /usr/bin/luxonis/examples/libutility.so [libdir]
+INSANE_SKIP:${PN}-dbg = "libdir"
+INSANE_SKIP:${PN}-examples = "libdir"

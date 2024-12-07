@@ -1,0 +1,45 @@
+From 49565e91711910aba80ec1d410a150b6daeccdde Mon Sep 17 00:00:00 2001
+From: Stephen Street <stephen@redrocketcomputing.com>
+Date: Fri, 6 Dec 2024 15:23:58 -0800
+Subject: [PATCH] Stop-build-path-leakage
+
+Upstream-Status: Pending
+
+Signed-off-by: Stephen Street <stephen@redrocketcomputing.com>
+---
+ CMakeLists.txt | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 854ce9b..cf26a08 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -72,17 +72,17 @@ include(cmake/XLinkDependencies.cmake)
+ if(XLINK_ENABLE_LIBUSB)
+     if(XLINK_LIBUSB_SYSTEM)
+         # Find system libusb
+-        find_path(LIBUSB_INCLUDE_DIR NAMES libusb.h PATH_SUFFIXES "include" "libusb" "libusb-1.0")
+-        find_library(LIBUSB_LIBRARY NAMES usb-1.0 PATH_SUFFIXES "lib")
+-        if(NOT LIBUSB_INCLUDE_DIR OR NOT LIBUSB_LIBRARY)
+-            message(FATAL_ERROR "libusb is required")
+-        endif()
+-        target_include_directories(${TARGET_NAME}
+-            PRIVATE "${LIBUSB_INCLUDE_DIR}"
+-        )
+-        target_link_libraries(${TARGET_NAME}
+-            PUBLIC ${LIBUSB_LIBRARY}
+-        )
++        find_package(PkgConfig)
++        pkg_check_modules(LIBUSB REQUIRED libusb-1.0)
++        message(STATUS "LIBUSB_LIBRARIES=${LIBUSB_LIBRARIES}")
++        message(STATUS "LIBUSB_INCLUDE_DIRS=${LIBUSB_INCLUDE_DIRS}")
++
++         target_include_directories(${TARGET_NAME}
++             PRIVATE "${LIBUSB_INCLUDE_DIR}"
++         )
++         target_link_libraries(${TARGET_NAME}
++             PUBLIC ${LIBUSB_LIBRARIES}
++         )
+     else()
+         # Link to CMake libusb
+         target_link_libraries(${TARGET_NAME} PRIVATE usb-1.0)
