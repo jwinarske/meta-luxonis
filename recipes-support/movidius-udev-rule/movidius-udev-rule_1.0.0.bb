@@ -11,8 +11,11 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/MIT;md5=0835ad
 
 SRC_URI = "file://80-movidius.rules"
 
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
+
 do_install () {
-    install -Dm0666 ${WORKDIR}/80-movidius.rules ${D}/etc/udev/rules.d/80-movidius.rules
+    install -Dm0666 ${UNPACKDIR}/80-movidius.rules ${D}/etc/udev/rules.d/80-movidius.rules
 }    
 
 FILES:${PN} += "/etc/udev/rules.d"

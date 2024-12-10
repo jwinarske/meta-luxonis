@@ -3,6 +3,9 @@ From: Joel Winarske <joel.winarsk@gmail.com>
 Date: Tue, 14 Mar 2023 12:43:29 -0700
 Subject: [PATCH] Remove Hunter
 
+Upstream-Status: Denied
+
+Signed-off-by: Stephen Street <stephen@redrocketcomputing.com>
 Signed-off-by: Joel Winarske <joel.winarsk@gmail.com>
 ---
  CMakeLists.txt | 22 ++++++++++++++++++++--

@@ -3,6 +3,9 @@ From: Joel Winarske <joel.winarsk@gmail.com>
 Date: Tue, 14 Mar 2023 18:16:10 +0000
 Subject: [PATCH] Do not configure psimd
 
+Upstream-Status: Denied
+
+Signed-off-by: Stephen Street <stephen@redrocketcomputing.com>
 Signed-off-by: Joel Winarske <joel.winarsk@gmail.com>
 ---
  CMakeLists.txt | 10 +++++-----
