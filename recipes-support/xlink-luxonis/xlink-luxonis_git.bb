@@ -17,11 +17,11 @@ DEPENDS += "\
     libusb1 \
 "
 
-SRCREV="d209b7eeb8ac68435df5097e57e1dfd8ea1d0e83"
-SRC_URI = "\
-    git://github.com/luxonis/XLink.git;protocol=https;branch=master \
-    file://0001-Remove-Hunter.patch \
-    "
+SRCREV="e9eb1ef38030176ad70cddd3b545d5e6c509f1e1"
+SRC_URI = "git://github.com/luxonis/XLink.git;protocol=https;branch=master \
+           file://0001-Remove-Hunter.patch \
+           file://0001-Stop-build-path-leakage.patch \
+           "
 
 S = "${WORKDIR}/git"
 
